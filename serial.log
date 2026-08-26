@@ -1,0 +1,43 @@
+================================
+          ORBIT OS
+================================
+Kernel loaded successfully.
+Version 0.1.0
+Architecture x86
+================================
+================================
+          ORBIT OS
+================================
+Kernel loaded successfully.
+Version 0.1.0
+Architecture x86
+================================
+Initializing CPU...
+PIT initialized.
+Hardware initialized.
+Memory initialized.
+Initrd filesystem mounted. Files:
+ - hello.txt
+Read from VFS (hello.txt): Hello from the Orbit OS Initrd Filesystem!
+
+Process manager initialized. Spawned background thread.
+Syscalls initialized.
+Interrupts enabled.
+
+Welcome to Orbit OS Shell!
+Type 'help' for a list of commands.
+Orbit> date
+2026-08-26 14:13:06
+Orbit> lspci
+Bus  Slot Func Vendor   Device   Class
+------------------------------------------
+00   00   0    8086     1237     06:00
+00   01   0    8086     7000     06:01
+00   01   1    8086     7010     01:01
+00   01   3    8086     7113     06:80
+00   02   0    1234     1111     03:00
+00   03   0    8086     100E     02:00
+Orbit> netinfo
+Intel E1000 (8254x) Gigabit Ethernet
+MAC Address: 52:54:00:12:34:56
+Orbit> 

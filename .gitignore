@@ -1,0 +1,5 @@
+*.o
+*.iso
+*.bin
+isodir/
+test_output.log
