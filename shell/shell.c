@@ -8,6 +8,7 @@
 #include "../drivers/pci.h"
 #include "../drivers/e1000.h"
 #include "../memory/pmm.h"
+#include "../kernel/io.h"
 
 #define CMD_BUFFER_SIZE 256
 
@@ -15,7 +16,9 @@ static char cmd_buffer[CMD_BUFFER_SIZE];
 static int cmd_length = 0;
 
 static void shell_prompt(void) {
+    terminal_setcolor(vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK));
     terminal_writestring("Orbit> ");
+    terminal_setcolor(vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK));
 }
 
 static void execute_command(char* cmd) {
@@ -141,6 +144,24 @@ static void execute_command(char* cmd) {
         } else {
             terminal_writestring("No compatible network adapter found.\n");
         }
+    } else if (strcmp(cmd, "exit") == 0) {
+        terminal_writestring("Shutting down QEMU...\n");
+        // ACPI Shutdown trick for QEMU
+        outw(0xB004, 0x2000);
+        outw(0x604, 0x2000);
+        outw(0x4004, 0x3400);
+    } else if (strcmp(cmd, "dir") == 0) {
+        // Alias for ls
+        execute_command("ls");
+    } else if (strcmp(cmd, "cls") == 0) {
+        // Alias for clear
+        execute_command("clear");
+    } else if (strncmp(cmd, "type ", 5) == 0) {
+        // Alias for cat
+        char temp[256];
+        strcpy(temp, "cat ");
+        strcpy(temp + 4, cmd + 5);
+        execute_command(temp);
     } else if (strncmp(cmd, "echo ", 5) == 0) {
         terminal_writestring(cmd + 5);
         terminal_writestring("\n");
@@ -157,7 +178,20 @@ void shell_initialize(void) {
 }
 
 void shell_run(void) {
-    terminal_writestring("Welcome to Orbit OS Shell!\nType 'help' for a list of commands.\n");
+    terminal_setcolor(vga_entry_color(VGA_COLOR_LIGHT_CYAN, VGA_COLOR_BLACK));
+    terminal_writestring("   ____       _     _ _      ___  ____  \n");
+    terminal_writestring("  / __ \\ _ __| |__ (_) |_   / _ \\/ ___| \n");
+    terminal_writestring(" | |  | | '__| '_ \\| | __| | | | \\___ \\ \n");
+    terminal_writestring(" | |__| | |  | |_) | | |_  | |_| |___) |\n");
+    terminal_writestring("  \\____/|_|  |_.__/|_|\\__|  \\___/|____/ \n\n");
+    
+    terminal_setcolor(vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK));
+    terminal_writestring(" Welcome to ");
+    terminal_setcolor(vga_entry_color(VGA_COLOR_LIGHT_CYAN, VGA_COLOR_BLACK));
+    terminal_writestring("Orbit OS");
+    terminal_setcolor(vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK));
+    terminal_writestring("! Type 'help' for a list of commands.\n\n");
+    
     shell_prompt();
 
     while (1) {
